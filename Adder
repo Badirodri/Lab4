@@ -1,0 +1,44 @@
+module Adder(
+input logic [32:0] A,//Estos datos ya contienen la mantisa con el 1 implicito
+input logic [32:0] B,
+input logic [23:0] bdesp,
+input logic en,
+output logic [33:0] S1
+    );
+    reg CIN;
+    reg COUT;
+    reg [23:0] SALI;
+    reg [24:0] salc;//Salidasumador+carry
+    CarryLookAhead Sumador(.ALUA(A[23:0]),.ALUB(B[23:0]),.CIN(1'b0),.S(SALI),.COUT(COUT));
+    always_latch
+    begin
+    if(en==0) begin
+    if(SALI[0]==0&&bdesp[23]==0)
+    begin
+    S1={A[32:24],COUT,SALI};
+    end
+    else if(SALI[0]==0&&bdesp[23]==1&& bdesp[22:0]==0)
+    begin
+      S1={A[32:24],COUT,SALI};
+    end
+    else if(SALI[0]==0&&bdesp[23]==1&& bdesp[22:0]!=0)
+    begin
+    salc={COUT,SALI};
+    S1={A[32:24],salc+1};
+    end
+    else if(SALI[0]==1&&bdesp[23]==0)
+    begin
+    S1={A[32:24],COUT,SALI};
+    end
+    else if(SALI[0]==1&&bdesp[23]==1)
+    begin
+    salc={COUT,SALI};
+    S1={A[32:24],salc+1};
+    end
+    end
+    else
+    begin
+    S1=34'bz;
+    end
+    end
+endmodule
