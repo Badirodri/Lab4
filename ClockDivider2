@@ -1,0 +1,20 @@
+
+module ClockDivider2#(parameter mod)//Definir modulo
+(
+    input clk_in,//Definir entrada
+    input en,//Definir entrada
+    input reset,//Definir entrada
+    output clk_out//Definir salida
+    );
+    reg [mod-1:0] count=0;
+        always @(posedge clk_in or posedge reset)
+            //reg [15:0] count=0;
+            if (reset)begin//Inicio del ciclo de division
+         count <= 0;
+         end
+        else if(en==1)begin
+         count <= count+1;
+         end//Fin del ciclo
+         assign clk_out=count[mod-1];
+
+endmodule//Fin del modulo
