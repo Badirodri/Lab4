@@ -1,0 +1,37 @@
+module ShifterMantisa(
+    input logic [32:0] A,//Estos datos ya contienen la mantisa con el 1 implicito
+    input logic [32:0] B,
+    input logic [7:0] SA,//cantidad de corrimientos
+    input logic en,
+    output logic [32:0] S1,
+    output logic [32:0] S2,
+    output logic [23:0] bdesplazados
+    );
+    reg [23:0] mantisamenor; //Registo de la mantisa
+    reg [7:0] exponente;
+    reg [23:0] aluaux;
+    reg [23:0] aluax1;
+    reg [23:0] aluax2;
+    reg [23:0] aluaux3;
+    always_latch
+    begin
+    if(en==0) begin
+    aluaux =0;
+    aluax1 = ~aluaux;
+    aluax2 = ~(aluax1<<SA);
+    aluaux3=(B[23:0]&aluax2);
+    bdesplazados = (aluaux3<<(8'b00011000-SA));
+    mantisamenor=(B[23:0]>>SA);
+    exponente = B[31:24]+SA;
+    S1 = A;
+    S2 = {B[32],exponente,mantisamenor};
+    end
+    else
+    begin
+    S1 = 33'bz;
+    S2 = 33'bz;
+    bdesplazados = 24'bz;
+    end
+    end
+   
+endmodule
