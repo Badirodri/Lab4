@@ -1,0 +1,50 @@
+module addermantisa(
+    input logic [32:0] A,//Estos datos ya contienen la mantisa con el 1 implicito
+    input logic [32:0] B,
+    input logic [23:0] bdesp,
+    input logic en,
+    output logic [33:0] S1
+    //output logic COUT
+    );
+        wire [24:0] C;
+        wire [23:0] G, P, SUM;
+        always_latch
+        begin
+        if(en==0) begin
+        
+        end
+        else
+        begin
+        
+        end
+        end
+        genvar i; //Crea la variable para el ciclo for
+        generate
+        for (i=0; i<24; i=i+1) 
+              begin: forloop1
+                Sumador_Completo sumador_completo_inst
+                    ( 
+                      .A(A[i]),
+                      .B(B[i]),
+                      .Cin(C[i]),
+                      .S(SUM[i]),
+                      .Cout()
+                      );
+              end
+        endgenerate
+        //Se crea a continuacion la logica del carry lookahead 
+        genvar j;
+        generate
+            for (j=0; j<24; j=j+1) 
+              begin : forloop2
+                assign G[j]   = A[j] & B[j];
+                assign P[j]   = A[j] | B[j];
+                assign C[j+1] = G[j] | (P[j] & C[j]);
+              end
+          endgenerate
+          assign C[0] = 1'b0;
+          //assign COUT = C[24];
+          
+          assign S1 = {A[32:24],C[24],SUM};
+            
+endmodule
