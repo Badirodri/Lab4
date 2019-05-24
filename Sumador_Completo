@@ -1,0 +1,16 @@
+module Sumador_Completo(
+    input logic A,
+    input logic B,
+    input logic Cin,
+    output logic S,
+    output logic Cout
+    );
+        logic p, g;
+        always_comb
+        begin
+        p <= A ^ B; // nonblocking
+        g <= A & B; // nonblocking
+        S <= p ^ Cin;
+        Cout <= g | (p & Cin);
+        end
+endmodule
