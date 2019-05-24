@@ -1,0 +1,38 @@
+module CarryLookAhead#(parameter Ancho=24)(
+input logic [Ancho-1:0] ALUA,
+input logic [Ancho-1:0] ALUB,
+input logic CIN,
+output logic [Ancho-1:0] S,
+output logic COUT
+    );
+        wire [Ancho:0] C;
+    wire [Ancho-1:0] G, P, SUM;
+    genvar i; //Crea la variable para el ciclo for
+    generate
+    for (i=0; i<Ancho; i=i+1) 
+          begin: forloop1
+            Sumador_Completo sumador_completo_inst
+                ( 
+                  .A(ALUA[i]),
+                  .B(ALUB[i]),
+                  .Cin(C[i]),
+                  .S(SUM[i]),
+                  .Cout()
+                  );
+          end
+    endgenerate
+    //Se crea a continuacion la logica del carry lookahead 
+    genvar j;
+    generate
+        for (j=0; j<Ancho; j=j+1) 
+          begin : forloop2
+            assign G[j]   = ALUA[j] & ALUB[j];
+            assign P[j]   = ALUA[j] | ALUB[j];
+            assign C[j+1] = G[j] | (P[j] & C[j]);
+          end
+      endgenerate
+      assign C[0] = CIN;
+       
+        assign S = SUM;
+        assign COUT = C[Ancho];
+endmodule
