@@ -1,0 +1,42 @@
+module Deco(//Definir modulo
+        input logic [3:0] datos,//Definir entrada
+        output [7:0] an,//Definir salida
+        output CA,//Definir salida
+        output CB,//Definir salida
+        output CC,//Definir salida
+        output CD,//Definir salida
+        output CE,//Definir salida
+        output CF,//Definir salida
+        output CG//Definir salida
+    );
+    reg [6:0] segmentos;//Definir segmentos
+           assign CA = segmentos[6];
+           assign CB = segmentos[5];
+           assign CC = segmentos[4];
+           assign CD = segmentos[3];
+           assign CE = segmentos[2];
+           assign CF = segmentos[1];
+           assign CG = segmentos[0];
+           assign an = 8'b11111110;
+           always_comb
+           case(datos)//Casos para los segmentos
+           // segmentos
+           0: segmentos = 7'b000_0001;
+           1: segmentos = 7'b100_1111;
+           2: segmentos = 7'b001_0010;
+           3: segmentos = 7'b000_0110;
+           4: segmentos = 7'b100_1100;
+           5: segmentos = 7'b010_0100;
+           6: segmentos = 7'b010_0000;
+           7: segmentos = 7'b000_1111;
+           8: segmentos = 7'b000_0000;
+           9: segmentos = 7'b000_1100;
+           10: segmentos = 7'b000_1000;
+           11: segmentos = 7'b110_0000;
+           12: segmentos = 7'b111_0010;
+           13: segmentos = 7'b100_0010;
+           14: segmentos = 7'b011_0000;
+           15: segmentos = 7'b011_1000;
+           default: segmentos = 7'b111_1111;
+           endcase
+endmodule//Fin del modulo
