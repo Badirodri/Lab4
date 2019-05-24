@@ -1,0 +1,32 @@
+
+module Normalizer(
+     input logic [33:0] A,
+     input logic en,
+     output logic [31:0] S
+    );
+    reg signed [24:0] mantisano;
+    reg [24:0] mdesplazada;// Mantisa desplazada
+    reg [7:0] exponente;
+    assign mantisano = A[24:0];
+    always_latch
+    begin
+    if(en==0) begin
+    if (A[24] == 0&& A[23]==1)
+    begin
+    S = {A[33:25],A[22:0]};
+    end
+    else if(A[24] == 1)
+    begin
+    mdesplazada = mantisano>>1;
+    exponente= A[32:25]+1;
+    S = {A[33],exponente,mdesplazada[22:0]};
+    end
+    end
+    else
+    begin
+    S=32'bz;
+    end
+    end
+
+
+endmodule
