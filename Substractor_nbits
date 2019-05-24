@@ -1,0 +1,40 @@
+module Substractor_nbits#(parameter Ancho=8)
+(
+    input logic [Ancho-1:0] ALUA,
+    input logic [Ancho-1:0] ALUB,
+    input logic CIN,
+    output logic [Ancho-1:0] S,
+    output logic COUT
+    );
+        wire [Ancho-1:0] Ci;
+        wire [Ancho-1:0] Co;
+        wire [Ancho-1:0] SUM;
+        //Se crea primero el primer restador
+        Substractor1bit restador1bit_inst
+                            ( 
+                              .A(ALUA[0]),
+                              .B(ALUB[0]),
+                              .Cin(Ci[0]),
+                              .S(SUM[0]),
+                              .Cout(Co[0])
+                              );
+            
+            genvar i; //Crea la variable para el ciclo for
+            generate
+            for (i=1; i<Ancho; i=i+1) 
+                  begin: forloop1
+                    Substractor1bit restador1bit_inst
+                        ( 
+                          .A(ALUA[i]),
+                          .B(ALUB[i]),
+                          .Cin(Co[i-1]),
+                          .S(SUM[i]),
+                          .Cout(Co[i])
+                          );
+                  end
+            endgenerate
+            assign Ci[0] = CIN;
+                   
+                    assign S = SUM;
+                    assign COUT = Co[Ancho-1];
+endmodule
