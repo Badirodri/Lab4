@@ -1,0 +1,56 @@
+
+module Order(//Definir modulo
+    input logic[31:0] N1,//Definir entrada
+    input logic [31:0] N2,//Definir entrada
+    input logic en,//Definir entrada
+    output logic [32:0] A,//Definir salida
+    output logic [32:0] B//Definir salida
+    );
+    //Esta parte permite cambiar el signo siempre a positivo, esto porque el proyecto
+    //solo recibira dos numeros positivos, en caso de ingresar un uno positivo, se cambiara dicho
+    //bit a positivo.
+    reg bitpositivo1;
+    reg bitpositivo2;
+    assign bitpositivo1 = (N1[31]&1'b0);
+    assign bitpositivo2 = (N2[31]&1'b0);
+    always_latch
+    begin
+    if(en==0) begin//Inicio del ciclo
+        if(N1[30:23]>N2[30:23])
+        begin
+        A <={bitpositivo1,N1[30:23],1'b1,N1[22:0]};
+        B <={bitpositivo2,N2[30:23],1'b1,N2[22:0]};
+        end
+        else if(N2[30:23]>N1[30:23])
+        begin
+        A <={bitpositivo2,N2[30:23],1'b1,N2[22:0]};;
+        B <={bitpositivo1,N1[30:23],1'b1,N1[22:0]};
+        end
+        else
+        begin
+        A <={bitpositivo1,N1[30:23],1'b1,N1[22:0]};
+        B <={bitpositivo2,N2[30:23],1'b1,N2[22:0]};
+        end  
+    end
+    else
+    begin
+    A <=33'bz;
+    B <=33'bz;
+    end
+//    if(N1[30:23]>N2[30:23])//Inicio del ciclo
+//    begin
+//    A <={bitpositivo1,N1[30:23],1'b1,N1[22:0]};
+//    B <={bitpositivo2,N2[30:23],1'b1,N2[22:0]};
+//    end
+//    else if(N2[30:23]>N1[30:23])
+//    begin
+//    A <={bitpositivo2,N2[30:23],1'b1,N2[22:0]};;
+//    B <={bitpositivo1,N1[30:23],1'b1,N1[22:0]};
+//    end
+//    else
+//    begin
+//    A <={bitpositivo1,N1[30:23],1'b1,N1[22:0]};
+//    B <={bitpositivo2,N2[30:23],1'b1,N2[22:0]};
+//    end
+    end
+endmodule//Fin del modulo
