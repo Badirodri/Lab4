@@ -1,0 +1,18 @@
+module ClockDivider(//Definir modulo
+    input clk,//Definir entrada
+    input en,//Definir entrada
+    input reset,//Definir entrada
+    output [15:0] data_clk//Definir salida
+    );
+    reg [15:0] count=0;
+    always @(posedge clk or posedge reset)
+        //reg [15:0] count=0;
+        if (reset)begin//Inicio del ciclo para la division
+     count <= 0;
+     end
+    else if(en==1)begin
+     count <= count+1;
+     end//Fin del ciclo
+     assign data_clk=count;
+
+endmodule//Fin del modulo
