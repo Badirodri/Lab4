@@ -1,42 +1,42 @@
 
-module DatosEntrada(
-    input logic [2:0] Sel,
-    input logic [7:0] Ent,
-    input logic x2,
-    output logic [31:0] S1,
-    output logic [31:0] S2
+module DatosEntrada( //Definir modulo
+    input logic [2:0] Sel,//Definir entrada
+    input logic [7:0] Ent,//Definir entrada
+    input logic x2,//Definir entrada
+    output logic [31:0] S1,//Definir salida
+    output logic [31:0] S2//Definir salida
     );
     always@(*)
     begin
-    if((Sel==3'b000)&&(x2==1))
+    if((Sel==3'b000)&&(x2==1))//Condicion de entrada
         begin
             S1[7:0] = Ent;
         end
-    if((Sel==3'b001)&&(x2==1))
+    if((Sel==3'b001)&&(x2==1))//Condicion de entrada
             begin
                  S1[15:8] = Ent;
             end
-    if((Sel==3'b010)&&(x2==1))
+    if((Sel==3'b010)&&(x2==1))//Condicion de entrada
             begin
                  S1[23:16] = Ent;
             end
-    if((Sel==3'b011)&&(x2==1))
+    if((Sel==3'b011)&&(x2==1))//Condicion de entrada
             begin
                 S1[31:24] = Ent;
             end
-    if((Sel==3'b100)&&(x2==1))
+    if((Sel==3'b100)&&(x2==1))//Condicion de entrada
             begin
                 S2[7:0] = Ent;
             end
-    if((Sel==3'b101)&&(x2==1))
+    if((Sel==3'b101)&&(x2==1))//Condicion de entrada
             begin
                 S2[15:8] = Ent;
             end
-    if((Sel==3'b110) &&(x2==1))
+    if((Sel==3'b110) &&(x2==1))//Condicion de entrada
             begin
                 S2[23:16] = Ent;
             end
-    if((Sel==3'b111) &&(x2==1))
+    if((Sel==3'b111) &&(x2==1))//Condicion de entrada
             begin
                 S2[31:24] = Ent;
             end
@@ -45,4 +45,4 @@ module DatosEntrada(
     
     end
     end
-endmodule
+endmodule//Fin del modulo
