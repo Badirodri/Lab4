@@ -1,0 +1,37 @@
+module Main(
+     input clk,
+     //input btnC,
+     input btnL,//Se esta agregando este (StateMachine5)
+     input btnR,//Se esta agregando este (StateMachine5)
+     input [14:0]sw,
+     output ca,
+     output cb,
+     output cc,
+     output cd,
+     output ce,
+     output cf,
+     output cg,
+     output [7:0]an,
+     output [14:0]led
+    );
+    wire [31:0]Salida;
+    wire [31:0]Salida1;
+    wire [31:0]Salida2;
+//    wire button;//Se esta cambiando este (StateMachine5)
+    wire button1;//Se esta agregando este (StateMachine5)
+    wire button2;//Se esta agregando este (StateMachine5)
+    wire clkdivider;
+    reg [3:0] esta;
+//    StateMachine4 order(.clk(button),.reset(sw[9]),.x(sw[8]),.x2(sw[15]),.ent(sw[7:0]),.sel(sw[13:11]),.est(led[13:0]),.resultSuma1(Salida1),.resultSuma2(Salida2));
+    StateMachine5 order(.clk(clkdivider),.reset(sw[8]),.x(button1),.x1(button2),.x2(sw[13]),.interruptor(sw[12]),.ent(sw[7:0]),.sel(sw[11:9]),.est(led[13:0]),.resultSuma1(Salida1),.resultSuma2(Salida2));
+    SegmentDriver Driver(.clk(clk),.display_A(Salida[3:0]),.display_B(Salida[7:4]),.display_C(Salida[11:8]),.display_D(Salida[15:12]),.display_E(Salida[19:16]),.display_F(Salida[23:20]),.display_G(Salida[27:24]),.display_H(Salida[31:28]),.segA(ca),.segB(cb),.segC(cc),.segD(cd),.segE(ce),.segF(cf),.segG(cg),.select_Display_A(an[0]),.select_Display_B(an[1]),.select_Display_C(an[2]),.select_Display_D(an[3]),.select_Display_E(an[4]),.select_Display_F(an[5]),.select_Display_G(an[6]),.select_Display_H(an[7]));
+    MuxDisplay mux(.Salida(Salida),.En1(Salida1),.En2(Salida2),.Sel(sw[14]));
+//    Antirebote anti(.clk(clk),.btn_in(btnC),.btn_out(button)); //Se esta cambiando este (StateMachine5)
+    ClockDivider2#(29) Divisor1(.clk_in(clk),.en(1'b1),.reset(1'b0),.clk_out(clkdivider));
+    VerificadorFrecuencia verificador(.in(clkdivider),.out(led[14]));
+
+    Antirebote antiL(.clk(clk),.btn_in(btnL),.btn_out(button1));//Se esta agregando este (StateMachine5)
+    Antirebote antiR(.clk(clk),.btn_in(btnR),.btn_out(button2));//Se esta agregando este (StateMachine5)
+
+
+endmodule
