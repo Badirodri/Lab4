@@ -1,0 +1,272 @@
+module StateMachine(
+    input logic clk,
+    input logic reset,
+    input logic x,
+    input logic [7:0]ent,
+    output logic [31:0] y1,
+    output logic [31:0] y2,
+//    output logic [32:0] ord1,
+//    output logic [32:0] ord2,
+    output logic [13:0] est,
+//    output logic [7:0] bdesp,
+    output logic [31:0] resultSuma
+    );
+//    reg state, nextstate;
+//    parameter S0=0, S1=1;
+//    logic [31:0] num1;
+//    logic [31:0] num2;
+    logic [31:0] actualResult;
+    logic [33:0] numResult;
+    logic [32:0] numOrd1;
+    logic [32:0] numOrd2;
+    logic [32:0] numComp1;
+    logic [32:0] numComp2;
+    logic [32:0] numAdder1;
+    logic [32:0] numAdder2;
+    logic [23:0] bDesp;
+    logic [7:0] cantDesp;
+    reg enOrder;
+    reg enShifter;
+    reg enComparator;
+    reg enAdder;
+    reg enNormalizer;
+    typedef enum logic [3:0] {S0, S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13} statetype;
+    statetype [3:0] state, nextstate;
+//    assign y1=num1;
+//    assign y2=num2;
+//    assign ord1=numA;
+//    assign ord2=numB;
+//    Order ordenador(.N1(y1),.N2(y2),.en(enOrder),.A(ord1),.B(ord2));
+    Order ordenador(.N1(y1),.N2(y2),.en(enOrder),.A(numOrd1),.B(numOrd2));
+    Comparator cmp(.En1(numOrd1),.En2(numOrd2),.en(enComparator),.S1(numComp1),.S2(numComp2),.SA(cantDesp));
+//    ShifterMantisa Desp(.A(numOrd1),.B(numOrd2),.SA(cantDesp),.en(enShifter),.S1(ord1),.S2(ord2),.bdesplazados(bdesp));
+    ShifterMantisa Desp(.A(numComp1),.B(numComp2),.SA(cantDesp),.en(enShifter),.S1(numAdder1),.S2(numAdder2),.bdesplazados(bDesp));
+    Adder sumador(.A(numAdder1),.B(numAdder2),.bdesp(bDesp),.en(enAdder),.S1(numResult));
+//    Normalizer normalizador(.A(numResult),.en(enNormalizer),.S(resultSuma));
+    Normalizer normalizador(.A(numResult),.en(enNormalizer),.S(actualResult));
+    
+    always @(posedge clk or posedge reset) // Permite actualizar el estado
+    if (reset)
+     state <= S0;
+    else
+     state <= nextstate;
+     always @(state) // Permite calcular la salida
+     begin
+      case(state)
+      S0:begin
+      //est =14'b00000000000001;
+            est =4'b0000;
+      y1 = 0;
+      y2 = 0;
+      enOrder=1'b1;
+      enShifter=1'b1;
+      enComparator=1'b1;
+      enAdder=1'b1;
+      enNormalizer=1'b1;
+      resultSuma=y1;
+      end 
+      S1:begin
+      y1[7:0] = ent;
+      //est =14'b00000000000010;
+      est =4'b0001;
+      enOrder=1'b1;
+      enShifter=1'b1;
+      enComparator=1'b1;
+      enAdder=1'b1;
+      enNormalizer=1'b1;
+      resultSuma=y1;
+      end 
+      S2:begin
+      y1[15:8] = ent;
+      //est =14'b00000000000100;
+      est =4'b0010;
+      enOrder=1'b1;
+      enShifter=1'b1;
+      enComparator=1'b1;
+      enAdder=1'b1;
+      enNormalizer=1'b1;
+      resultSuma=y1;
+      end 
+      S3:begin
+      y1[23:16] = ent;
+      //est =14'b00000000001000;
+     est =4'b0011;
+      enOrder=1'b1;
+      enShifter=1'b1;
+      enComparator=1'b1;
+      enAdder=1'b1;
+      enNormalizer=1'b1;
+      resultSuma=y1;
+      end 
+      S4:begin
+      y1[31:24] = ent;
+      //est =14'b00000000010000;
+      est =4'b0100;
+      enOrder=1'b1;
+      enShifter=1'b1;
+      enComparator=1'b1;
+      enAdder=1'b1;
+      enNormalizer=1'b1;
+      resultSuma=y1;
+      end
+      S5:begin
+      y2[7:0] = ent;
+      //est =14'b00000000100000;
+      est =4'b0101;
+      enOrder=1'b1;
+      enShifter=1'b1;
+      enComparator=1'b1;
+      enAdder=1'b1;
+      enNormalizer=1'b1;
+      resultSuma=y2;
+      end 
+      S6:begin
+      y2[15:8] = ent;
+      //est =14'b00000001000000;
+       est =4'b0110;
+      enOrder=1'b1;
+      enShifter=1'b1;
+      enComparator=1'b1;
+      enAdder=1'b1;
+      enNormalizer=1'b1;
+      resultSuma=y2;
+      end 
+      S7:begin
+      y2[23:16] = ent;
+      //est =14'b00000010000000;
+      est =4'b0111;
+      enOrder=1'b1;
+      enShifter=1'b1;
+      enComparator=1'b1;
+      enAdder=1'b1;
+      enNormalizer=1'b1;
+      resultSuma=y2;
+      end 
+      S8:begin
+      y2[31:24] = ent;
+      //est =14'b00000100000000;
+           est =4'b1000;
+      enOrder=1'b1;
+      enShifter=1'b1;
+      enComparator=1'b1;
+      enAdder=1'b1;
+      enNormalizer=1'b1;
+      resultSuma=y2;
+      end 
+      S9:begin
+      //est =14'b00001000000000;
+           est =4'b1001;
+      enOrder<=1'b0;
+      enShifter<=1'b1;
+      enComparator<=1'b1;
+      enAdder<=1'b1;
+      enNormalizer<=1'b1;
+      resultSuma<=y2;
+      end 
+      S10:begin
+      //est =14'b00010000000000;
+       est =4'b1010;
+      enOrder<=1'b0;
+      enShifter<=1'b1;
+      enComparator<=1'b0;
+      enAdder<=1'b1;
+      enNormalizer<=1'b1;
+ //     resultSuma={numComp1[32:24],15'b000000000000000,cantDesp};
+        resultSuma = numComp1[31:0];
+      end 
+      S11:begin
+      //est =14'b00100000000000;
+      est =4'b1011;
+      enOrder<=1'b0;
+      enShifter<=1'b0;
+      enComparator<=1'b0;
+      enAdder<=1'b1;
+      enNormalizer<=1'b1;
+      resultSuma={numAdder2[32:24],15'b000000000000000,bDesp};
+      end
+      S12:begin
+//      est =14'b01000000000000;
+      est =4'b1100;
+      enOrder=1'b0;
+      enShifter=1'b0;
+      enComparator=1'b0;
+      enAdder=1'b0;
+      enNormalizer=1'b1;
+      resultSuma=numResult[32:0];
+      end
+      S13:begin
+//      est =14'b10000000000000;
+      est =4'b1101;
+      enOrder=1'b0;
+      enShifter=1'b0;
+      enComparator=1'b0;
+      enAdder=1'b0;
+      enNormalizer=1'b0;
+      resultSuma=actualResult;
+      end
+      endcase
+     end
+     always @(state or x) // Permite calcular el siguiente estado
+     begin
+      //nextstate = S0;
+      case(state)
+      S0: if(x==0)
+      nextstate = S0;
+      else
+      nextstate = S1;
+      S1: if(x==0)
+      nextstate = S1;
+      else
+      nextstate = S2;
+      S2: if(x==0)
+      nextstate = S2;
+      else
+      nextstate = S3;
+      S3: if(x==0)
+      nextstate = S3;
+      else
+      nextstate = S4;
+      S4: if(x==0)
+      nextstate = S4;
+      else
+      nextstate = S5;
+      S5: if(x==0)
+      nextstate = S5;
+      else
+      nextstate = S6;
+      S6: if(x==0)
+      nextstate = S6;
+      else
+      nextstate = S7;
+      S7: if(x==0)
+      nextstate = S7;
+      else
+      nextstate = S8;
+      S8: if(x==0)
+      nextstate = S8;
+      else
+      nextstate = S9;
+      S9: if(x==0)
+      nextstate = S9;
+      else
+      nextstate = S10;
+      S10: if(x==0)
+      nextstate = S10;
+      else
+      nextstate = S11;
+      S11: if(x==0)
+      nextstate = S11;
+      else
+      nextstate = S12;
+      S12: if(x==0)
+      nextstate = S12;
+      else
+      nextstate = S13;
+      S13: if(x==0)
+      nextstate = S13;
+      else
+      nextstate = S0;
+      default: nextstate = S0;
+      endcase
+     end 
+endmodule
